@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
 #define MAX_NAME 256
 #define TABLE_SIZE 10
 
@@ -14,7 +13,7 @@ typedef struct person {
 
 person *hash_table[TABLE_SIZE];
 
-unsigned int hash(char *name) {
+unsigned int hash(char *name) { // "Ashok"  --> Ashok sAhok
     int length = strlen(name);
     unsigned int hash_value = 0;
     for (int i = 0; i < length; i++) {
