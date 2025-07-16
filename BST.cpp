@@ -1,58 +1,110 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-struct TreeNode{
+struct TreeNode {
     int data;
     TreeNode *left;
     TreeNode *right;
-    TreeNode(int val){
+    TreeNode(int val) {
         data = val;
-        left = right = NULL;
+        left = right = nullptr;
     }
 };
-struct BinarySearchTree{
-    TreeNode *root = NULL;
-    TreeNode *Add(TreeNode *root, int val){
-        if(root == NULL)return new TreeNode(val);
-        if(root->data > val){
-            root->left = Add(root->left,val);
+
+struct BinarySearchTree {
+    TreeNode *root = nullptr;
+
+    TreeNode* Add(TreeNode *root, int val) {
+        if (root == nullptr) return new TreeNode(val);
+        if (root->data > val) {
+            root->left = Add(root->left, val);
+        } else if (root->data < val) {
+            root->right = Add(root->right, val);
+        } 
+        // Ignore duplicates
+        return root;
+    }
+
+    void Insert(int val) {
+        root = Add(root, val);
+    }
+
+    void printInorder(TreeNode *root) {
+        if (root) {
+            printInorder(root->left);
+            cout << root->data << " ";
+            printInorder(root->right);
         }
-        if(root->data < val){
-            root->right = Add(root->right,val);
+    }
+
+    void Inorder() {
+        printInorder(root);
+    }
+
+    TreeNode* FindMin(TreeNode* node) {
+        while (node && node->left) node = node->left;
+        return node;
+    }
+
+    TreeNode* Delete(TreeNode* root, int val) {
+        if (root == nullptr) return nullptr;
+        if (val < root->data) {
+            root->left = Delete(root->left, val);
+        } else if (val > root->data) {
+            root->right = Delete(root->right, val);
+        } else {
+            if (root->left == nullptr) {
+                TreeNode* temp = root->right;
+                delete root;
+                return temp;
+            } else if (root->right == nullptr) {
+                TreeNode* temp = root->left;
+                delete root;
+                return temp;
+            } else {
+                TreeNode* temp = FindMin(root->right);
+                root->data = temp->data;
+                root->right = Delete(root->right, temp->data);
+            }
         }
         return root;
     }
-    void Insert(int val){
-        root = Add(root,val);
+
+    void Remove(int val) {
+        root = Delete(root, val);
     }
-    void printInorder(TreeNode *root){
-        if(root){
-        printInorder(root->left);
-        cout << root->data <<" ";
-        printInorder(root->right);
+
+    bool Search(TreeNode* root, int val) {
+        if (root == nullptr) return false;
+        if (root->data == val) return true;
+        if (val < root->data) return Search(root->left, val);
+        return Search(root->right, val);
+    }
+
+    bool Exists(int val) {
+        return Search(root, val);
+    }
+
+    void Free(TreeNode* root) {
+        if (root) {
+            Free(root->left);
+            Free(root->right);
+            delete root;
         }
     }
-    void Inorder(){
-        printInorder(root);
+
+    ~BinarySearchTree() {
+        Free(root);
     }
-    
-    //Delete Data form BST 
-
-    //Search Data in BST 
-
-
 };
 
-
-int main(){
+int main() {
     int n;
     cin >> n;
-    vector<int>A(n);
-    //6
-    //30 10 70 9 25 40
-    for(int i = 0 ; i < n ; i++)cin >> A[i];
-    BinarySearchTree BST; 
-    for(int i = 0 ; i < n ; i++){
+    vector<int> A(n);
+    for (int i = 0; i < n; i++) cin >> A[i];
+    BinarySearchTree BST;
+    for (int i = 0; i < n; i++) {
         BST.Insert(A[i]);
     }
     BST.Inorder();
