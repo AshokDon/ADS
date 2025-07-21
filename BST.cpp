@@ -50,18 +50,30 @@ struct BinarySearchTree {
         if (root == nullptr) return nullptr;
         if (val < root->data) {
             root->left = Delete(root->left, val);
-        } else if (val > root->data) {
+        } 
+        else if (val > root->data) {
             root->right = Delete(root->right, val);
-        } else {
-            if (root->left == nullptr) {
-                TreeNode* temp = root->right;
-                delete root;
+        } 
+        else {
+            //no child
+            if(root->left == NULL && root->right == NULL){
+                delete(root);
+                return NULL;
+            }
+            //one child
+            else if(root->left == NULL || root->right == NULL){
+                TreeNode *temp;
+                if(root->left != NULL){
+                    temp = root->left;
+                }
+                else{
+                    temp = root->right;
+                }
+                detele(root)
                 return temp;
-            } else if (root->right == nullptr) {
-                TreeNode* temp = root->left;
-                delete root;
-                return temp;
-            } else {
+            } 
+                //two child 
+            else {
                 TreeNode* temp = FindMin(root->right);
                 root->data = temp->data;
                 root->right = Delete(root->right, temp->data);
